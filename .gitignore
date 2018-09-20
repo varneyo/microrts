@@ -1,4 +1,11 @@
 *.class
 /bin/
+/out/
 /.classpath
 /.project
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/libraries/lib.xml
+microrts.iml

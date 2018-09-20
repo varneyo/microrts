@@ -88,15 +88,8 @@ public class FixedOpponentsTournament {
         // create all the read/write folders:
         String readWriteFolders[] = new String[AIs.size()];
         boolean firstPreAnalysis[][] = new boolean[AIs.size()][maps.size()];
-        for(int i = 0;i<AIs.size();i++) {
-            readWriteFolders[i] = folderForReadWriteFolders + "/AI" + i + "readWriteFolder";
-            File f = new File(readWriteFolders[i]);
-            f.mkdir();
-            for(int j = 0;j<maps.size();j++) {
-                firstPreAnalysis[i][j] = true;
-            }
-        }
-        
+        RoundRobinTournament.createAIReadWriteFolders(AIs, maps, folderForReadWriteFolders, readWriteFolders, firstPreAnalysis);
+
         for(int iteration = 0;iteration<iterations;iteration++) {
             for(int map_idx = 0;map_idx<maps.size();map_idx++) {
                 PhysicalGameState pgs = PhysicalGameState.load(maps.get(map_idx),utt);
@@ -139,34 +132,9 @@ public class FixedOpponentsTournament {
                         GameState gs = new GameState(pgs.clone(),utt);
 
                         if (progress!=null) progress.write("MATCH UP: " + ai1+ " vs " + ai2 + "\n");
-                        
-                        if (preAnalysis) {
-                            long preTime1 = preAnalysisBudgetRestOfTimes;
-                            if (firstPreAnalysis[ai1_idx][map_idx]) {
-                                preTime1 = preAnalysisBudgetFirstTimeInAMap;
-                                firstPreAnalysis[ai1_idx][map_idx] = false;
-                            }
-                            long pre_start1 = System.currentTimeMillis();
-                            ai1.preGameAnalysis(gs, preAnalysisBudgetRestOfTimes, readWriteFolders[ai1_idx]);
-                            long pre_end1 = System.currentTimeMillis();
-                            if (progress != null) {
-                                progress.write("preGameAnalysis player 1 took " + (pre_end1 - pre_start1) + "\n");
-                                if ((pre_end1 - pre_start1)>preTime1) progress.write("TIMEOUT PLAYER 1!\n");
-                            }
-                            long preTime2 = preAnalysisBudgetRestOfTimes;
-                            if (firstPreAnalysis[ai2_idx][map_idx]) {
-                                preTime2 = preAnalysisBudgetFirstTimeInAMap;
-                                firstPreAnalysis[ai2_idx][map_idx] = false;
-                            }
-                            long pre_start2 = System.currentTimeMillis();
-                            ai2.preGameAnalysis(gs, preTime2, readWriteFolders[ai2_idx]);
-                            long pre_end2 = System.currentTimeMillis();
-                            if (progress != null) {
-                                progress.write("preGameAnalysis player 2 took " + (pre_end2 - pre_start2) + "\n");
-                                if ((pre_end2 - pre_start2)>preTime2) progress.write("TIMEOUT PLAYER 2!\n");
-                            }
-                        }
-                        
+
+                        RoundRobinTournament.preAnalysis(preAnalysisBudgetFirstTimeInAMap, preAnalysisBudgetRestOfTimes, preAnalysis, progress, readWriteFolders, firstPreAnalysis, map_idx, ai1_idx, ai2_idx, ai1, ai2, gs);
+
                         boolean gameover = false;
                         int crashed = -1;
                         int timedout = -1;
@@ -257,41 +225,17 @@ public class FixedOpponentsTournament {
                                     }
                                 }
                             }
-                            
-                            if (traceOutputfolder != null && (!pa1.isEmpty() || !pa2.isEmpty())) {
-                                te = new TraceEntry(gs.getPhysicalGameState().clone(), gs.getTime());
-                                te.addPlayerAction(pa1.clone());
-                                te.addPlayerAction(pa2.clone());
-                                trace.addEntry(te);
-                            }
-                            
+
+                            RoundRobinTournament.addTraces(traceOutputfolder, gs, trace, pa1, pa2);
+
                             gs.issueSafe(pa1);
                             gs.issueSafe(pa2);
                             gameover = gs.cycle();
                         } while (!gameover && 
                                  (gs.getTime() < maxGameLength));
-                       
-                        if (traceOutputfolder != null) {
-                            File folder = new File(traceOutputfolder);
-                            if (!folder.exists()) folder.mkdirs();
-                            te = new TraceEntry(gs.getPhysicalGameState().clone(), gs.getTime());
-                            trace.addEntry(te);
-                            XMLWriter xml;
-                            ZipOutputStream zip = null;
-                            String filename = ai1_idx + "-vs-" + ai2_idx + "-" + map_idx + "-" + iteration;
-                            filename = filename.replace("/", "");
-                            filename = filename.replace(")", "");
-                            filename = filename.replace("(", "");
-                            filename = traceOutputfolder + "/" + filename;
-                            zip = new ZipOutputStream(new FileOutputStream(filename + ".zip"));
-                            zip.putNextEntry(new ZipEntry("game.xml"));
-                            xml = new XMLWriter(new OutputStreamWriter(zip));
-                            trace.toxml(xml);
-                            xml.flush();
-                            zip.closeEntry();
-                            zip.close();
-                        }
-                        
+
+                        RoundRobinTournament.zipTraces(traceOutputfolder, iteration, map_idx, ai1_idx, ai2_idx, gs, trace);
+
                         int winner = -1;
                         if (crashed!=-1) {
                             winner = 1 - crashed;
