@@ -19,10 +19,10 @@ public class RunTournament {
         // Set tournament settings
         int rounds = 2;  // Number of rounds in the tournament
         int timeBudget = 100;
-        int maxGameLength = 1000;
+        int maxGameLength = 2000;
         boolean fullObservability = true;
         boolean selfMatches = false;  // If true, AIs will be paired up against themselves as well as the others
-        boolean timeOutCheck = false;
+        boolean timeOutCheck = true;
         boolean preAnalysis = false;  // If true, AIs will have a budget for pre analysis before game starts
         int preAnalysisBudgetFirstTimeInAMap = 0;
         int preAnalysisBudgetRestOfTimes = 0;
