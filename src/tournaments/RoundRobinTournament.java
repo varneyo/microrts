@@ -536,7 +536,7 @@ public class RoundRobinTournament {
                 firstPreAnalysis[ai1_idx][map_idx] = false;
             }
             long pre_start1 = System.currentTimeMillis();
-            ai1.preGameAnalysis(gs, preAnalysisBudgetRestOfTimes, readWriteFolders[ai1_idx]);
+            ai1.preGameAnalysis(gs, preTime1, readWriteFolders[ai1_idx]);
             long pre_end1 = System.currentTimeMillis();
             if (progress != null) {
                 progress.write("preGameAnalysis player 1 took " + (pre_end1 - pre_start1) + "\n");
