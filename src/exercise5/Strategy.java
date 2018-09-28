@@ -16,14 +16,12 @@ public class Strategy {
     private Unit activeWorker = null;
     private ArrayList<UnitAction> buildBarracksActions;
     private ArrayList<UnitAction> harvestActions;
-    private boolean harvesting, rollingState, buildingBarracks, attacking;
-    private boolean barracksBuilt;
+    private boolean harvesting, buildingBarracks, attacking;
 
     public Strategy() {
         buildBarracksActions = new ArrayList<>();
         harvestActions = new ArrayList<>();
         harvesting = true;
-        barracksBuilt = false;
     }
 
     PlayerAction execute(int player, GameState gs, UnitTypeTable utt, PathFinding pf) {
@@ -78,7 +76,6 @@ public class Strategy {
                 }
             }
 
-
             // This block deals with the behaviour (sequence of commands) in TODOs 1-4
             if (gs.getActionAssignment(activeWorker) == null) {
 
@@ -93,18 +90,16 @@ public class Strategy {
 
                     //After we have completed harvesting, we build barracks.
                 }else if(buildingBarracks) {
-                    barracksBuilt = handleBuildBarracks(gs, pa, utt);
+                    boolean barracksBuilt = handleBuildBarracks(gs, pa, utt);
                     if(barracksBuilt)
                     {
                         buildingBarracks = false;
-                        rollingState = true;
-                    }
 
-                    //After we have started building the barracks, we use the forward model to see the future.
-                }else if(rollingState) {
-                    handleRollState(gs, pa, player);
-                    rollingState = false;
-                    attacking = true;
+                        //After we have started building the barracks, we use the forward model to see the future.
+                        handleRollState(gs, pa, player);
+
+                        attacking = true;
+                    }
 
                     //We send the worker to attack after the barracks are built.
                 }else if(attacking && gs.getUnits().contains(activeWorker)){
@@ -132,7 +127,8 @@ public class Strategy {
                         // nextAction = ...
                     }
 
-                    //TODO 6d: Set the first available action for this unit only if the barracks have been built and the unit is a building:
+                    boolean barracksExist = gs.getPhysicalGameState().getUnitAt(4,4) != null;
+                    //TODO 6d: Set the first available action for this unit only if the barracks exist and the unit is a building:
                     if ( true /*  Contents from TODO 6d */ ) { // Buildings
 
                         //TODO 6e: Assign the first one from the available actions list to 'nextAction'
