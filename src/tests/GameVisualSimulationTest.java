@@ -4,6 +4,7 @@ import ai.core.AI;
 import ai.*;
 import ai.abstraction.WorkerRush;
 import ai.abstraction.pathfinding.BFSPathFinding;
+import exercise5.BotExercise5;
 import gui.PhysicalGameStatePanel;
 import javax.swing.JFrame;
 import rts.GameState;
@@ -27,7 +28,7 @@ public class GameVisualSimulationTest {
         boolean gameover = false;
 
         // Set AIs playing the game
-        AI ai1 = new WorkerRush(utt, new BFSPathFinding());        
+        AI ai1 = new BotExercise5(TIME_BUDGET, -1, utt, new BFSPathFinding());  //new WorkerRush(utt, new BFSPathFinding());
         AI ai2 = new RandomBiasedAI();
 
         JFrame w = PhysicalGameStatePanel.newVisualizer(gs,640,640,false,
