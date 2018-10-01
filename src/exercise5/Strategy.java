@@ -111,7 +111,8 @@ public class Strategy {
             // General rules for other units.
             for (Unit u : gs.getUnits()) {
 
-                //TODO 6a: Set actions for this unit only if: its controlling player is 'this', they have no action assigned and they are not the activeWorker
+                //TODO 6a: Set actions for this unit only if: its controlling player is 'this', they have no action
+                //   assigned and they are not the activeWorker
 
                 if ( true /*  Contents from TODO 6a */ ) {
 
@@ -211,6 +212,9 @@ public class Strategy {
      * @param playerID This player ID.
      */
     private void handleRollState(GameState gs, PlayerAction pa, int playerID) {
+
+        int numStepsForward = 200;
+
         //TODO 3a: Create a copy of the current game state.
 
         //TODO 3b: Issue the actions from pa in the copy of gs.
@@ -247,14 +251,14 @@ public class Strategy {
         // If we found an enemy, attack them...
         if (closestEnemy != null) {
 
-            UnitAction nextAction;
+            UnitAction nextAction = null;
 
             // Attack if in range
 
-            if (true /* TODO 4b: change this to True if the opponent is in attack range of the active worker (look for a function in Unit)  */) {
+            if (true /* TODO 4b: change this to True if the opponent is in attack range of the active worker (hint: look for a function in Unit)  */) {
 
                 // TODO 4c: assign an attack action, on the location of the enemy, to nextAction
-                nextAction = new UnitAction(UnitAction.TYPE_ATTACK_LOCATION, closestEnemy.getX(), closestEnemy.getY());
+                // nextAction = ...
 
             } else {
 
