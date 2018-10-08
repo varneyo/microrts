@@ -4,9 +4,12 @@ import ai.core.AI;
 import ai.*;
 import ai.abstraction.WorkerRush;
 import ai.abstraction.pathfinding.BFSPathFinding;
+import ai.evaluation.SimpleSqrtEvaluationFunction3;
 import exercise5.BotExercise5;
 import gui.PhysicalGameStatePanel;
 import javax.swing.JFrame;
+
+import rsoneply.RandomSearchOnePlyAgent;
 import rts.GameState;
 import rts.PhysicalGameState;
 import rts.PlayerAction;
@@ -28,8 +31,22 @@ public class GameVisualSimulationTest {
         boolean gameover = false;
 
         // Set AIs playing the game
-        AI ai1 = new BotExercise5(TIME_BUDGET, -1, utt, new BFSPathFinding());  //new WorkerRush(utt, new BFSPathFinding());
+        //AI ai1 = new BotExercise5(TIME_BUDGET, -1, utt, new BFSPathFinding());  //new WorkerRush(utt, new BFSPathFinding());
+
+        AI ai1 = new WorkerRush(utt);
         AI ai2 = new RandomBiasedAI();
+
+//        AI ai1 = new mc.MonteCarlo(100, -1, 100, 1000,
+//                new RandomBiasedAI(), new SimpleSqrtEvaluationFunction3());
+//        AI ai2 = new mc.MonteCarlo(100, -1, 100, 1000,
+//                new RandomAI(), new SimpleSqrtEvaluationFunction3());
+
+
+//        AI ai1 = new exercise8.MonteCarlo(100, -1, 10, 1000,
+//                new RandomBiasedAI(), new SimpleSqrtEvaluationFunction3(), utt);
+//        AI ai2 = new mc.MonteCarlo(100, -1, 10, 1000,
+//                new RandomAI(), new SimpleSqrtEvaluationFunction3());
+
 
         JFrame w = PhysicalGameStatePanel.newVisualizer(gs,640,640,false,
                                                         PhysicalGameStatePanel.COLORSCHEME_BLACK);
