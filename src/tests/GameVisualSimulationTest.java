@@ -9,7 +9,6 @@ import exercise5.BotExercise5;
 import gui.PhysicalGameStatePanel;
 import javax.swing.JFrame;
 
-import rsoneply.RandomSearchOnePlyAgent;
 import rts.GameState;
 import rts.PhysicalGameState;
 import rts.PlayerAction;
