@@ -1,9 +1,5 @@
 package tests;
 
-import ai.Ben.StrategyChooser;
-import ai.Ben.WorkerRush2;
-import ai.Ben.mattRushAi;
-import ai.Ben.newAI;
 import ai.abstraction.HeavyRush;
 import ai.abstraction.LightRush;
 import ai.abstraction.RangedRush;
