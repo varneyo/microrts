@@ -19,7 +19,7 @@ public class RunTournament {
         // Set tournament settings
         int rounds = 2;                                // Number of rounds in the tournament
         int timeBudget = 100;                          // Time budget allowed per action (default 100ms)
-        int maxGameLength = 2000;                      // Maximum game length (default 2000 ticks)
+        //int maxGameLength = 2000;                    // NOT IN USE. Maximum game length (default 2000 ticks) [See List<Integer> lengths]
         boolean fullObservability = true;              // Full or partial observability (default true)
         boolean selfMatches = false;                   // If self-play should be used (default false)
         boolean timeOutCheck = true;                   // If the game should count as a loss if a bot times out (default true)
@@ -41,7 +41,16 @@ public class RunTournament {
 
         // Create list of maps for tournament
         List<String> maps = new ArrayList<>();
-        maps.add("maps/8x8/basesWorkers8x8.xml");
+        maps.add("maps/16x16/basesWorkers16x16.xml");
+        maps.add("maps/24x24/basesWorkers24x24H.xml");
+        maps.add("maps/16x16/TwoBasesBarracks16x16.xml");
+        maps.add("maps/NoWhereToRun9x8.xml");
+
+        List<Integer> lengths = new ArrayList<>();
+        lengths.add(5000);
+        lengths.add(10000);
+        lengths.add(5000);
+        lengths.add(2000);
 
         // Initialize result writing
         String folderForReadWriteFolders = "readwrite";
@@ -57,7 +66,7 @@ public class RunTournament {
 //        Writer progress = null;  // Ignore progress
 
         // Run tournament
-        runTournament(AIs,playOnlyWithThisAI, maps, rounds, maxGameLength, timeBudget, iterationBudget,
+        runTournament(AIs,playOnlyWithThisAI, maps, rounds, lengths, timeBudget, iterationBudget,
                 preAnalysisBudgetFirstTimeInAMap, preAnalysisBudgetRestOfTimes, fullObservability, selfMatches,
                 timeOutCheck, runGC, preAnalysis, new UnitTypeTable(), traceOutputFolder, out,
                 progress, folderForReadWriteFolders);

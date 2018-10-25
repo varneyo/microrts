@@ -29,7 +29,7 @@ public class GameVisualSimulationTest {
     public static void main(String args[]) throws Exception {
         UnitTypeTable utt = new UnitTypeTable();
 
-        PhysicalGameState pgs = PhysicalGameState.load("maps/16x16/basesWorkers16x16.xml", utt);  // Set map
+        PhysicalGameState pgs = PhysicalGameState.load("maps/24x24/basesWorkers24x24H.xml", utt);  // Set map
 //        PhysicalGameState pgs = MapGenerator.basesWorkers8x8Obstacle();
 
         GameState gs = new GameState(pgs, utt);
@@ -49,11 +49,11 @@ public class GameVisualSimulationTest {
 //                new HeavyRush(utt,pf), new RangedRush(utt,pf), new mattRushAi(utt), inertiaCycles);
 
 
-        AI ai2 = new RandomBiasedAI();
+//        AI ai2 = new RandomBiasedAI();
 
         AI ai1 = new absmc.MonteCarlo(100, -1, 100, new RandomBiasedAI(), new SimpleSqrtEvaluationFunction3(), utt);
-//        AI ai2 = new mc.MonteCarlo(100, -1, 100, 1000,
-//                new RandomAI(), new SimpleSqrtEvaluationFunction3());
+        AI ai2 = new mc.MonteCarlo(100, -1, 100, 1000,
+                new RandomAI(), new SimpleSqrtEvaluationFunction3());
 
 
 //        AI ai1 = new exercise8.MonteCarlo(100, -1, 10, 1000,

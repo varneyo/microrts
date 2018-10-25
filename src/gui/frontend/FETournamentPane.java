@@ -390,10 +390,6 @@ public class FETournamentPane extends JPanel {
                         Constructor cons = c.getConstructor(UnitTypeTable.class);
                         opponentAIs.add((AI)cons.newInstance(utt));
                     }
-                    for(int i = 0;i<mapListModel.getSize();i++) {
-                        String mapname = (String)mapListModel.getElementAt(i);
-                        maps.add(mapname);
-                    }
                     
                     int iterations = Integer.parseInt(iterationsField.getText());
                     int maxGameLength = Integer.parseInt(maxGameLengthField.getText());
@@ -406,6 +402,15 @@ public class FETournamentPane extends JPanel {
                     boolean timeOutCheck = timeoutCheckBox.isSelected();
                     boolean gcCheck = gcCheckBox.isSelected();
                     boolean preGameAnalysis = preAnalysisBudget > 0;
+
+                    List<Integer> maxGameLengthList = new ArrayList<>();
+
+                    for(int i = 0;i<mapListModel.getSize();i++) {
+                        String mapname = (String)mapListModel.getElementAt(i);
+                        maps.add(mapname);
+                        maxGameLengthList.add(maxGameLength);
+                    }
+
 
                     String prefix = "tournament_";
                     int idx = 0;
@@ -432,10 +437,10 @@ public class FETournamentPane extends JPanel {
                                         try {
                                             Writer writer = new FileWriter(fileToUse);
                                             Writer writerProgress = new JTextAreaWriter(tournamentProgressTextArea);
-                                            RoundRobinTournament.runTournament(selectedAIs, -1, maps, 
-                                                                               iterations, maxGameLength, timeBudget, iterationsBudget, 
+                                            RoundRobinTournament.runTournament(selectedAIs, -1, maps,
+                                                                               iterations, maxGameLengthList, timeBudget, iterationsBudget,
                                                                                preAnalysisBudget, 1000, // 1000 is just to give 1 second to the AIs to load their read/write folder saved content
-                                                                               fullObservability, selfMatches, timeOutCheck, gcCheck, preGameAnalysis, 
+                                                                               fullObservability, selfMatches, timeOutCheck, gcCheck, preGameAnalysis,
                                                                                utt, tracesFolder,
                                                                                writer, writerProgress,
                                                                                tournamentfolder);
