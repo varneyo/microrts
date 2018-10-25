@@ -41,9 +41,6 @@ public class GameVisualSimulationTest {
         int inertiaCycles = 10;
 
         PathFinding pf = new BFSPathFinding();
-//        AI ai1 = new StrategyChooser(lookahead, pf, new newAI(utt,pf), new WorkerRush2(utt,pf), new LightRush(utt,pf),
-//                new HeavyRush(utt,pf), new RangedRush(utt,pf), new mattRushAi(utt), inertiaCycles);
-
 
 //        AI ai2 = new RandomBiasedAI();
 
