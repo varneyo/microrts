@@ -23,11 +23,11 @@ import rts.units.UnitTypeTable;
 public class TraceVisualizationTest {
 
   public static void main(String []args) throws JDOMException, IOException, Exception {
-	  boolean zip = false;
+	  boolean zip = true;
 	  
 	  Trace t;
 	  if(zip){
-		  ZipInputStream zipIs=new ZipInputStream(new FileInputStream(args[0]));
+		  ZipInputStream zipIs=new ZipInputStream(new FileInputStream("C:\\Users\\olive\\Documents\\microrts\\results\\2018-10-26\\Run_17\\basesWorkers8x8A\\traces\\match_id_8_1_PSMCTS_LOSER_-vs-_0_SCV_WINNER__Round_0.zip"));
 		  zipIs.getNextEntry();
 		  t = new Trace(new SAXBuilder().build(zipIs).getRootElement());
 	  }else{ 

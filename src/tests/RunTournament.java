@@ -1,5 +1,7 @@
 package tests;
 
+import ai.CapivaraBot.ai.competition.capivara.Capivara;
+import ai.CapivaraBot.ai.competition.capivara.CapivaraPlusPlus;
 import ai.RandomBiasedAI;
 import ai.abstraction.LightRush;
 import ai.abstraction.WorkerRush;
@@ -19,7 +21,7 @@ public class RunTournament {
     public static void main(String args[]) throws Exception {
 
         // Set tournament settings
-        int rounds = 2;                                // Number of rounds in the tournament
+        int rounds = 20;                                // Number of rounds in the tournament
         int timeBudget = 100;                          // Time budget allowed per action (default 100ms)
         //int maxGameLength = 2000;                    // NOT IN USE. Maximum game length (default 2000 ticks) [See List<Integer> lengths]
         boolean fullObservability = true;              // Full or partial observability (default true)
@@ -47,10 +49,10 @@ public class RunTournament {
 
         // Create list of maps for tournament
         List<String> maps = new ArrayList<>();
-        maps.add("maps/16x16/basesWorkers16x16.xml");
-        maps.add("maps/24x24/basesWorkers24x24H.xml");
-        maps.add("maps/16x16/TwoBasesBarracks16x16.xml");
-        maps.add("maps/NoWhereToRun9x8.xml");
+        maps.add("maps/BroodWar/(4)BloodBath.scmD.xml");
+        maps.add("maps/BroodWar/(4)Andromeda.scxE.xml");
+        //maps.add("maps/16x16/TwoBasesBarracks16x16.xml");
+        //maps.add("maps/NoWhereToRun9x8.xml");
 
         List<Integer> lengths = new ArrayList<>();
         lengths.add(5000);
@@ -61,8 +63,8 @@ public class RunTournament {
         // Initialize result writing
         String folderForReadWriteFolders = "readwrite";
 
-//        String traceOutputFolder = "traces";
-        String traceOutputFolder = null;  // Ignore traces
+        String traceOutputFolder = "traces";
+        //String traceOutputFolder = null;  // Ignore traces
 
 //        Writer out = new BufferedWriter(new FileWriter(new File("results.txt")));  // Print to file
         Writer out = new PrintWriter(System.out);  // Print to console
