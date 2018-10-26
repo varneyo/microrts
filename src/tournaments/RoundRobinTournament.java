@@ -42,7 +42,7 @@ public class RoundRobinTournament {
             int playOnlyGamesInvolvingThisAI,
             List<String> maps,
             int rounds,
-            int maxGameLength,
+            List<Integer> lengths,
             int timeBudget,
             int iterationsBudget,
             long preAnalysisBudgetFirstTimeInAMap,
@@ -84,7 +84,7 @@ public class RoundRobinTournament {
         // Write tournament settings
         out.write("Settings:\n");
         out.write("\tRounds:\t" + rounds + "\n");
-        out.write("\tMax Game Length:\t" + maxGameLength + "\n");
+        //out.write("\tMax Game Length:\t" + maxGameLength + "\n");
         out.write("\tTime Budget:\t" + timeBudget + "\n");
         out.write("\tIterations Budget:\t" + iterationsBudget + "\n");
         out.write("\tPregame Analysis Budget:\t" + preAnalysisBudgetFirstTimeInAMap + "\t" + preAnalysisBudgetRestOfTimes + "\n");
@@ -102,6 +102,9 @@ public class RoundRobinTournament {
         // Run tournament
         for (int round = 0; round < rounds; round++) {  // For each round
             for (int map_idx = 0; map_idx < maps.size(); map_idx++) {  // For each map
+
+                //Max length of the game for this map.
+                int maxGameLength = lengths.get(map_idx);
 
                 // Load map
                 PhysicalGameState pgs = PhysicalGameState.load(maps.get(map_idx), utt);
@@ -536,7 +539,7 @@ public class RoundRobinTournament {
                 firstPreAnalysis[ai1_idx][map_idx] = false;
             }
             long pre_start1 = System.currentTimeMillis();
-            ai1.preGameAnalysis(gs, preAnalysisBudgetRestOfTimes, readWriteFolders[ai1_idx]);
+            ai1.preGameAnalysis(gs, preTime1, readWriteFolders[ai1_idx]);
             long pre_end1 = System.currentTimeMillis();
             if (progress != null) {
                 progress.write("preGameAnalysis player 1 took " + (pre_end1 - pre_start1) + "\n");

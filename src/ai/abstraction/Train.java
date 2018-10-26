@@ -127,5 +127,9 @@ public class Train extends AbstractAction {
 
         return -distance;
     }
-    
+
+    @Override
+    public void reset() {
+        completed = false;
+    }
 }

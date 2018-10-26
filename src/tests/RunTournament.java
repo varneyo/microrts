@@ -19,18 +19,18 @@ public class RunTournament {
     public static void main(String args[]) throws Exception {
 
         // Set tournament settings
-        int rounds = 2;  // Number of rounds in the tournament
-        int timeBudget = 100;
-        int maxGameLength = 2000;
-        boolean fullObservability = true;
-        boolean selfMatches = false;  // If true, AIs will be paired up against themselves as well as the others
-        boolean timeOutCheck = true;
-        boolean preAnalysis = false;  // If true, AIs will have a budget for pre analysis before game starts
-        int preAnalysisBudgetFirstTimeInAMap = 0;
-        int preAnalysisBudgetRestOfTimes = 0;
-        boolean runGC = false;  // If true, Garbage Collector is called at every game tick before every AI action call
-        int iterationBudget = -1;  // Set to -1 for infinite
-        int playOnlyWithThisAI = -1;  // Set to an index in the AI array if one AI should be in all games
+        int rounds = 2;                                // Number of rounds in the tournament
+        int timeBudget = 100;                          // Time budget allowed per action (default 100ms)
+        //int maxGameLength = 2000;                    // NOT IN USE. Maximum game length (default 2000 ticks) [See List<Integer> lengths]
+        boolean fullObservability = true;              // Full or partial observability (default true)
+        boolean selfMatches = false;                   // If self-play should be used (default false)
+        boolean timeOutCheck = true;                   // If the game should count as a loss if a bot times out (default true)
+        boolean preAnalysis = true;                    // If bots are allowed to analyse the game before starting (default true)
+        int preAnalysisBudgetFirstTimeInAMap = 1000;   // Time budget for pre-analysis if playing first time on a new map (default 1s)
+        int preAnalysisBudgetRestOfTimes = 1000;       // Time budget for pre-analysis for all other cases (default 1s)
+        boolean runGC = false;                         // If Java Garbage Collector should be called before each player action (default false)
+        int iterationBudget = -1;                      // Iteration budget, set to -1 for infinite (default: -1)
+        int playOnlyWithThisAI = -1;                   //  AI index in list of AIs, if one AI should be included in all matches played (default -1)
 
         // Create list of AIs participating in tournament
         List<AI> AIs = new ArrayList<>();
@@ -48,6 +48,15 @@ public class RunTournament {
         // Create list of maps for tournament
         List<String> maps = new ArrayList<>();
         maps.add("maps/16x16/basesWorkers16x16.xml");
+        maps.add("maps/24x24/basesWorkers24x24H.xml");
+        maps.add("maps/16x16/TwoBasesBarracks16x16.xml");
+        maps.add("maps/NoWhereToRun9x8.xml");
+
+        List<Integer> lengths = new ArrayList<>();
+        lengths.add(5000);
+        lengths.add(10000);
+        lengths.add(5000);
+        lengths.add(2000);
 
         // Initialize result writing
         String folderForReadWriteFolders = "readwrite";
@@ -63,7 +72,7 @@ public class RunTournament {
 //        Writer progress = null;  // Ignore progress
 
         // Run tournament
-        runTournament(AIs,playOnlyWithThisAI, maps, rounds, maxGameLength, timeBudget, iterationBudget,
+        runTournament(AIs,playOnlyWithThisAI, maps, rounds, lengths, timeBudget, iterationBudget,
                 preAnalysisBudgetFirstTimeInAMap, preAnalysisBudgetRestOfTimes, fullObservability, selfMatches,
                 timeOutCheck, runGC, preAnalysis, utt, traceOutputFolder, out,
                 progress, folderForReadWriteFolders);

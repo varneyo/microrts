@@ -40,18 +40,20 @@ public class Idle extends AbstractAction  {
     }             
 
     public UnitAction execute(GameState gs, ResourceUsage ru) {
-        PhysicalGameState pgs = gs.getPhysicalGameState();
-        if (!unit.getType().canAttack) return null;
-        for(Unit target:pgs.getUnits()) {
-            if (target.getPlayer()!=-1 && target.getPlayer()!=unit.getPlayer()) {
-                int dx = target.getX()-unit.getX();
-                int dy = target.getY()-unit.getY();
-                double d = Math.sqrt(dx*dx+dy*dy);
-                if (d<=unit.getAttackRange()) {
-                    return new UnitAction(UnitAction.TYPE_ATTACK_LOCATION,target.getX(),target.getY());
-                }
-            }
-        }
-        return null;
-    }    
+//        PhysicalGameState pgs = gs.getPhysicalGameState();
+//        if (!unit.getType().canAttack) return null;
+//        for(Unit target:pgs.getUnits()) {
+//            if (target.getPlayer()!=-1 && target.getPlayer()!=unit.getPlayer()) {
+//                int dx = target.getX()-unit.getX();
+//                int dy = target.getY()-unit.getY();
+//                double d = Math.sqrt(dx*dx+dy*dy);
+//                if (d<=unit.getAttackRange()) {
+//                    return new UnitAction(UnitAction.TYPE_ATTACK_LOCATION,target.getX(),target.getY());
+//                }
+//            }
+//        }
+//        return null;
+        return new UnitAction(UnitAction.TYPE_NONE);
+    }
+
 }
