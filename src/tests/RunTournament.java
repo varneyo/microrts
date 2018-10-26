@@ -1,6 +1,8 @@
 package tests;
 
 import ai.RandomBiasedAI;
+import ai.abstraction.LightRush;
+import ai.abstraction.WorkerRush;
 import ai.core.AI;
 import ai.evaluation.SimpleEvaluationFunction;
 import ai.mcts.naivemcts.NaiveMCTS;
@@ -34,14 +36,18 @@ public class RunTournament {
         List<AI> AIs = new ArrayList<>();
 
         // Add AIs to list
-        AIs.add(new UCT(timeBudget, -1, 100, 20, new RandomBiasedAI(),
-                new SimpleEvaluationFunction()));
-        AIs.add(new NaiveMCTS(timeBudget, -1, 100, 20, 0.33f, 0.0f, 0.75f,
-                new RandomBiasedAI(), new SimpleEvaluationFunction(), true));
+//        AIs.add(new UCT(timeBudget, -1, 100, 20, new RandomBiasedAI(),
+//                new SimpleEvaluationFunction()));
+//        AIs.add(new NaiveMCTS(timeBudget, -1, 100, 20, 0.33f, 0.0f, 0.75f,
+//                new RandomBiasedAI(), new SimpleEvaluationFunction(), true));
+
+        UnitTypeTable utt = new UnitTypeTable(UnitTypeTable.VERSION_ORIGINAL, UnitTypeTable.MOVE_CONFLICT_RESOLUTION_CANCEL_BOTH);
+        AIs.add(new LightRush(utt));
+        AIs.add(new WorkerRush(utt));
 
         // Create list of maps for tournament
         List<String> maps = new ArrayList<>();
-        maps.add("maps/8x8/basesWorkers8x8.xml");
+        maps.add("maps/16x16/basesWorkers16x16.xml");
 
         // Initialize result writing
         String folderForReadWriteFolders = "readwrite";
@@ -59,7 +65,7 @@ public class RunTournament {
         // Run tournament
         runTournament(AIs,playOnlyWithThisAI, maps, rounds, maxGameLength, timeBudget, iterationBudget,
                 preAnalysisBudgetFirstTimeInAMap, preAnalysisBudgetRestOfTimes, fullObservability, selfMatches,
-                timeOutCheck, runGC, preAnalysis, new UnitTypeTable(), traceOutputFolder, out,
+                timeOutCheck, runGC, preAnalysis, utt, traceOutputFolder, out,
                 progress, folderForReadWriteFolders);
     }
 }
