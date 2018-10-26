@@ -27,7 +27,7 @@ public class TraceVisualizationTest {
 	  
 	  Trace t;
 	  if(zip){
-		  ZipInputStream zipIs=new ZipInputStream(new FileInputStream("C:\\Users\\olive\\Documents\\microrts\\results\\2018-10-26\\Run_17\\basesWorkers8x8A\\traces\\match_id_8_1_PSMCTS_LOSER_-vs-_0_SCV_WINNER__Round_0.zip"));
+		  ZipInputStream zipIs=new ZipInputStream(new FileInputStream("C:\\Users\\olive\\Documents\\microrts\\results\\2018-10-26\\Run_5\\basesWorkers16x16A\\traces\\match_id_4_0_CAPI_LOSER_-vs-_3_LR_WINNER__Round_0.zip"));
 		  zipIs.getNextEntry();
 		  t = new Trace(new SAXBuilder().build(zipIs).getRootElement());
 	  }else{ 

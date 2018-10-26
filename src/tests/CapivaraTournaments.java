@@ -1,4 +1,5 @@
 package tests;
+import ai.core.ContinuingAI;
 import ai.microRTSbot.src.standard.StrategyTactics;
 import  src.tournaments.CustomRoundRobinTournament;
 
@@ -32,11 +33,12 @@ public class CapivaraTournaments    {
         boolean selfMatches = false;                   // If self-play should be used (default false)
         boolean timeOutCheck = true;                   // If the game should count as a loss if a bot times out (default true)
         boolean preAnalysis = true;                    // If bots are allowed to analyse the game before starting (default true)
-        int preAnalysisBudgetFirstTimeInAMap = 1000;   // Time budget for pre-analysis if playing first time on a new map (default 1s)
+        int preAnalysisBudgetFirstTimeInAMap = 2000;   // Time budget for pre-analysis if playing first time on a new map (default 1s)
         int preAnalysisBudgetRestOfTimes = 1000;       // Time budget for pre-analysis for all other cases (default 1s)
         boolean runGC = false   ;                         // If Java Garbage Collector should be called before each player action (default false)
         int iterationBudget = -1;                      // Iteration budget, set to -1 for infinite (default: -1)
-        int playOnlyWithThisAI = -1;                   //  AI index in list of AIs, if one AI should be included in all matches played (default -1)
+        int playOnlyWithThisAI = -1;                   //  AI index in list
+        // of AIs, if one AI should be included in all matches played (default -1)
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String todays_date = sdf.format(new Date());
@@ -44,6 +46,7 @@ public class CapivaraTournaments    {
         List<AI> AIs = new ArrayList<>();
         UnitTypeTable utt = new UnitTypeTable();
 
+        List<Thread> threads= new ArrayList<>();
 
         // Set Capi Gridsearch features
         int [] controlUnits = {1,2,3,4,5};
@@ -75,17 +78,17 @@ public class CapivaraTournaments    {
             }
         }else {
             // Standard Capi
-            //AIs.add(new CapivaraPlusPlus(utt));
+            AIs.add((new CapivaraPlusPlus(utt)));
         }
         //AIs.add(new AN2(utt));
         //AIs.add(new AN1(utt));
         AIs.add(new SCV(utt));
-        AIs.add(new ai.puppet.PuppetSearchMCTS(utt));
-        AIs.add(new StrategyTactics(utt));
+        //AIs.add(new ai.puppet.PuppetSearchMCTS(utt));
+        //AIs.add((new StrategyTactics(utt)));
         AIs.add(new LightRush(utt));
         AIs.add(new WorkerRush(utt));
-        AIs.add(new NaiveMCTS(utt));
-        AIs.add(new AHTNAI(utt));
+        AIs.add((new NaiveMCTS(utt)));
+        //AIs.add(new AHTNAI(utt));
 
         // Create list of maps for tournament
         TournamentMapConfig map_1 =  new TournamentMapConfig("maps/8x8/basesWorkers8x8A.xml",  true,8,"basesWorkers8x8A");
@@ -110,11 +113,11 @@ public class CapivaraTournaments    {
         List<TournamentMapConfig> tmapconfig = new ArrayList<>();
         tmapconfig.add(map_1);
         tmapconfig.add(map_2);
-        /*tmapconfig.add(map_3);
+        tmapconfig.add(map_3);
         tmapconfig.add(map_4);
         tmapconfig.add(map_5);
         tmapconfig.add(map_6);
-        tmapconfig.add(map_7);
+        /*tmapconfig.add(map_7);
         //tmapconfig.add(map_8);
         tmapconfig.add(map_9);
         tmapconfig.add(map_10);
@@ -200,7 +203,7 @@ public class CapivaraTournaments    {
         String run_path = addDirectory("results/"+todays_date.toString()+"/Run_",1);
 
         tmapconfig.parallelStream().forEach(tournamentMapConfig ->{} );
-
+        List<CustomRoundRobinTournament> rr = new ArrayList<>();
         for (TournamentMapConfig tmc : tmapconfig) {
             // Create a new folder for the run
 
@@ -217,13 +220,22 @@ public class CapivaraTournaments    {
             Writer progress = new PrintWriter(System.out);  // Write progress to console
             //        Writer progress = null;  // Ignore progress
 
-            CustomRoundRobinTournament rr = new CustomRoundRobinTournament(AIs, playOnlyWithThisAI, tmc.getMapAsList(), rounds, tmc.maxGameLength, tmc.timeBudget, iterationBudget,
+
+            /*CustomRoundRobinTournament rr = new CustomRoundRobinTournament(AIs, playOnlyWithThisAI, tmc.getMapAsList(), rounds, tmc.maxGameLength, 1000, iterationBudget,
                     preAnalysisBudgetFirstTimeInAMap, preAnalysisBudgetRestOfTimes, fullObservability, selfMatches,
                     timeOutCheck, runGC, preAnalysis, utt, traceOutputFolder, out,
                     progress, folderForReadWriteFolders);
-                rr.runTournament();
+               */
+            rr.add(new CustomRoundRobinTournament(AIs, playOnlyWithThisAI, tmc.getMapAsList(), rounds, tmc.maxGameLength, 100, iterationBudget,
+                    preAnalysisBudgetFirstTimeInAMap, preAnalysisBudgetRestOfTimes, fullObservability, selfMatches,
+                    timeOutCheck, runGC, preAnalysis, utt, traceOutputFolder, out,
+                    progress, folderForReadWriteFolders));
+
             //out.close();
 
+        }
+        for(CustomRoundRobinTournament crr:rr){
+            crr.start();
         }
     }
 

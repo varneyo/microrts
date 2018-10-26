@@ -4,7 +4,8 @@ import java.io.*;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
+import java.io.StringWriter;
+import java.io.PrintWriter;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -37,10 +38,10 @@ import util.XMLWriter;
  *
  * @author santi
  */
-public class CustomRoundRobinTournament  extends  Thread {
+public class CustomRoundRobinTournament  implements Runnable {
 
-    public static boolean visualize = false;
-    public static int TIMEOUT_CHECK_TOLERANCE = 20;
+    public static boolean visualize = true;
+    public static int TIMEOUT_CHECK_TOLERANCE = 50;
     public static boolean USE_CONTINUING_ON_INTERRUPTIBLE = false;
 
     /**
@@ -65,7 +66,8 @@ public class CustomRoundRobinTournament  extends  Thread {
     Writer out;
     Writer progress;
     String folderForReadWriteFolders;
-    Boolean running=true;
+    Boolean running=false;
+    Thread thread;
 
     public CustomRoundRobinTournament(List<ai.core.AI> AIs, int playOnlyGamesInvolvingThisAI, List<String> maps, int rounds, int maxGameLength,
                                       int timeBudget, int iterationsBudget, long preAnalysisBudgetFirstTimeInAMap, long preAnalysisBudgetRestOfTimes,
@@ -96,13 +98,27 @@ public class CustomRoundRobinTournament  extends  Thread {
 
     }
 
+    public synchronized void stop() throws InterruptedException {
+        System.out.println("IN STOP");
+        if(!running){
+            thread.join();
+        }
+    }
 
-
+    public synchronized void start(){
+        if (running){
+            return;
+        }
+        thread = new Thread(this);
+        thread.start();
+    }
 
     public void run(){
         System.out.print("In thread run ");
+        running=true;
         try {
             while(running){
+                System.out.println("");
                 runTournament();
             }
         }catch (Exception e){
@@ -319,6 +335,13 @@ public class CustomRoundRobinTournament  extends  Thread {
                                     pa1 = ai1.getAction(0, gs);
                                     AI1end = System.currentTimeMillis();
                                 } catch (Exception e) {
+                                    System.out.println("CRASSSHHHHEDD" );
+                                    StringWriter sw = new StringWriter();
+                                    PrintWriter pw = new PrintWriter(sw);
+                                    e.printStackTrace(pw);
+                                    String sStackTrace = sw.toString(); // stack trace as a string
+                                    System.out.println(sStackTrace);
+
                                     crashed = 0;
                                     break;
                                 }
@@ -332,6 +355,12 @@ public class CustomRoundRobinTournament  extends  Thread {
                                     pa2 = ai2.getAction(1, gs);
                                     AI2end = System.currentTimeMillis();
                                 } catch (Exception e) {
+                                    System.out.println("CRASSSHHHHEDD" );
+                                    StringWriter sw = new StringWriter();
+                                    PrintWriter pw = new PrintWriter(sw);
+                                    e.printStackTrace(pw);
+                                    String sStackTrace = sw.toString(); // stack trace as a string
+                                    System.out.println(sStackTrace);
                                     crashed = 1;
                                     break;
                                 }
@@ -395,10 +424,12 @@ public class CustomRoundRobinTournament  extends  Thread {
                             // Timeout agents and end the game
                             if (timeoutCheck) {
                                 if (AI1time > timeBudget + TIMEOUT_CHECK_TOLERANCE) {
+                                    System.out.println("TIMEOTTTTTTTTTTTTTTT "+ai1.toString()+ ", "+timeBudget);
                                     timedout = 0;
                                     break;
                                 }
                                 if (AI2time > timeBudget + TIMEOUT_CHECK_TOLERANCE) {
+                                    System.out.println("TIMEOTTTTTTTTTTTTTTT "+ai2.toString()+ ", "+timeBudget);
                                     timedout = 1;
                                     break;
                                 }
@@ -480,7 +511,7 @@ public class CustomRoundRobinTournament  extends  Thread {
                             out.write("\n match id \titeration\tmap\twinner index\tai1\tai2\ttime\twinner id\tcrashed\ttimedout\n");
                         }
                         headerCounter++;
-                        out.write(match_id_counter+"\t"+round + "\t" + map_idx + "\t"+ winner_ind+"\t"+ AIs.get(ai1_idx).toString() + "\t" + getAIShortName(AIs.get(ai2_idx).toString())  + "\t"
+                        out.write(match_id_counter+"\t"+round + "\t" + map_idx + "\t"+ winner_ind+"\t"+ AIs.get(ai1_idx).toString() + "\t" + (AIs.get(ai2_idx).toString())  + "\t"
                                 + gs.getTime() + "\t" + winner_s  + "\t" + crashed + "\t" + timedout + "\n");
                         out.flush();
 
@@ -516,7 +547,7 @@ public class CustomRoundRobinTournament  extends  Thread {
 
                 }
             }
-            running=false;
+
         }
 
 
@@ -568,6 +599,10 @@ public class CustomRoundRobinTournament  extends  Thread {
             progress.write("\nRoundRobinTournament: tournament ended\n");
             progress.flush();
         }
+
+        System.out.println("FINNISHED ");
+        running=false;
+        stop();
     }
 
     /**
