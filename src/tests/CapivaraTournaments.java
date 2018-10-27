@@ -1,4 +1,6 @@
 package tests;
+import ai.abstraction.pathfinding.BFSPathFinding;
+import ai.abstraction.pathfinding.FloodFillPathFinding;
 import ai.core.ContinuingAI;
 import ai.microRTSbot.src.standard.StrategyTactics;
 import  src.tournaments.CustomRoundRobinTournament;
@@ -44,7 +46,8 @@ public class CapivaraTournaments    {
         String todays_date = sdf.format(new Date());
         // Create list of AIs participating in tournament
         List<AI> AIs = new ArrayList<>();
-        UnitTypeTable utt = new UnitTypeTable();
+        UnitTypeTable utt = new UnitTypeTable(UnitTypeTable.VERSION_ORIGINAL_FINETUNED,
+                UnitTypeTable.MOVE_CONFLICT_RESOLUTION_CANCEL_BOTH);
 
         List<Thread> threads= new ArrayList<>();
 
@@ -63,7 +66,7 @@ public class CapivaraTournaments    {
         evaluationFunctionsList.add(new SimpleSqrtEvaluationFunction3());
         List<AI> capiAIs = new ArrayList<>();
         capiAIs.add(new SCV(utt));
-        Boolean performGridSearch = false;
+        Boolean performGridSearch = true;
 
         // Add AIs to list
         // If true perform a gridsearch
@@ -80,13 +83,18 @@ public class CapivaraTournaments    {
             // Standard Capi
             AIs.add((new CapivaraPlusPlus(utt)));
         }
+
+        // AI Configs
+        RunConfigurableExperiments rce = new RunConfigurableExperiments();
+
+
         //AIs.add(new AN2(utt));
         //AIs.add(new AN1(utt));
         AIs.add(new SCV(utt));
-        //AIs.add(new ai.puppet.PuppetSearchMCTS(utt));
-        //AIs.add((new StrategyTactics(utt)));
-        AIs.add(new LightRush(utt));
-        AIs.add(new WorkerRush(utt));
+        AIs.add(new ai.puppet.PuppetSearchMCTS(utt));
+        AIs.add((new StrategyTactics(utt)));
+        AIs.add(new LightRush(utt, new FloodFillPathFinding()));
+        AIs.add(new WorkerRush(utt, new FloodFillPathFinding()));
         AIs.add((new NaiveMCTS(utt)));
         //AIs.add(new AHTNAI(utt));
 
@@ -111,24 +119,24 @@ public class CapivaraTournaments    {
         TournamentMapConfig map_18 =  new TournamentMapConfig("maps/BroodWar/(2)Destination.scxA.xml", true,128,"(2)DestinationA");
 
         List<TournamentMapConfig> tmapconfig = new ArrayList<>();
-        tmapconfig.add(map_1);
-        tmapconfig.add(map_2);
-        tmapconfig.add(map_3);
-        tmapconfig.add(map_4);
-        tmapconfig.add(map_5);
+        //tmapconfig.add(map_1);
+        //tmapconfig.add(map_2);
+        //tmapconfig.add(map_3);
+        //tmapconfig.add(map_4);
+        //tmapconfig.add(map_5);
         tmapconfig.add(map_6);
-        /*tmapconfig.add(map_7);
+        //tmapconfig.add(map_7);
         //tmapconfig.add(map_8);
-        tmapconfig.add(map_9);
-        tmapconfig.add(map_10);
-        tmapconfig.add(map_11);*/
-        /*tmapconfig.add(map_12);
-        tmapconfig.add(map_13);
-        tmapconfig.add(map_14);
-        tmapconfig.add(map_15);
-        tmapconfig.add(map_16);
-        tmapconfig.add(map_17);
-        tmapconfig.add(map_18);*/
+        //tmapconfig.add(map_9);
+        //tmapconfig.add(map_10);
+        //tmapconfig.add(map_11);
+        //tmapconfig.add(map_12);
+        //tmapconfig.add(map_13);
+        //tmapconfig.add(map_14);
+        //tmapconfig.add(map_15);
+        //tmapconfig.add(map_16);
+        //tmapconfig.add(map_17);
+        //tmapconfig.add(map_18);
 
 
 
@@ -235,7 +243,7 @@ public class CapivaraTournaments    {
 
         }
         for(CustomRoundRobinTournament crr:rr){
-            crr.start();
+            crr.runTournament();
         }
     }
 

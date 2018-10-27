@@ -67,7 +67,7 @@ public class CustomRoundRobinTournament  implements Runnable {
     Writer progress;
     String folderForReadWriteFolders;
     Boolean running=false;
-    Thread thread;
+    Thread rrthread;
 
     public CustomRoundRobinTournament(List<ai.core.AI> AIs, int playOnlyGamesInvolvingThisAI, List<String> maps, int rounds, int maxGameLength,
                                       int timeBudget, int iterationsBudget, long preAnalysisBudgetFirstTimeInAMap, long preAnalysisBudgetRestOfTimes,
@@ -101,7 +101,7 @@ public class CustomRoundRobinTournament  implements Runnable {
     public synchronized void stop() throws InterruptedException {
         System.out.println("IN STOP");
         if(!running){
-            thread.join();
+            rrthread.join();
         }
     }
 
@@ -109,8 +109,8 @@ public class CustomRoundRobinTournament  implements Runnable {
         if (running){
             return;
         }
-        thread = new Thread(this);
-        thread.start();
+        rrthread = new Thread(this);
+        rrthread.start();
     }
 
     public void run(){
@@ -234,7 +234,7 @@ public class CustomRoundRobinTournament  implements Runnable {
             for (int map_idx = 0; map_idx < maps.size(); map_idx++) {  // For each map
 
                 // Load map
-                rts.PhysicalGameState pgs = rts.PhysicalGameState.load(maps.get(map_idx), utt);
+                rts.PhysicalGameState pgs = rts.PhysicalGameState.load(maps.get(map_idx), this.utt);
 
                 // Pair up the AIs
                 for (int ai1_idx = 0; ai1_idx < AIs.size(); ai1_idx++) {
@@ -335,7 +335,7 @@ public class CustomRoundRobinTournament  implements Runnable {
                                     pa1 = ai1.getAction(0, gs);
                                     AI1end = System.currentTimeMillis();
                                 } catch (Exception e) {
-                                    System.out.println("CRASSSHHHHEDD" );
+                                    System.out.println("CRASSSHHHHEDD   " +maps.get(map_idx) );
                                     StringWriter sw = new StringWriter();
                                     PrintWriter pw = new PrintWriter(sw);
                                     e.printStackTrace(pw);
@@ -355,7 +355,7 @@ public class CustomRoundRobinTournament  implements Runnable {
                                     pa2 = ai2.getAction(1, gs);
                                     AI2end = System.currentTimeMillis();
                                 } catch (Exception e) {
-                                    System.out.println("CRASSSHHHHEDD" );
+                                    System.out.println("CRASSSHHHHEDD   "+maps.get(map_idx) );
                                     StringWriter sw = new StringWriter();
                                     PrintWriter pw = new PrintWriter(sw);
                                     e.printStackTrace(pw);
@@ -602,7 +602,7 @@ public class CustomRoundRobinTournament  implements Runnable {
 
         System.out.println("FINNISHED ");
         running=false;
-        stop();
+        //stop();
     }
 
     /**
