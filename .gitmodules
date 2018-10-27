@@ -1,0 +1,3 @@
+[submodule "src/ai/src/ai/CapivaraBot"]
+	path = src/ai/src/ai/CapivaraBot
+	url = https://github.com/varneyo/CapivaraBot.git
