@@ -52,13 +52,14 @@ public class AStarPathFinding extends PathFinding {
         int w = pgs.getWidth();
         int h = pgs.getHeight();
         if (free==null || free.length<w*h) {
-            free = new Boolean[w][h];        
+            free = new Boolean[w][h];
             closed = new int[w*h];
             open = new int[w*h];
             heuristic = new int[w*h];
             parents = new int[w*h];
             inOpenOrClosed = new int[w*h];
             cost = new int[w*h];
+
         }
         for(int y = 0, i = 0;y<h;y++) {
             for(int x = 0;x<w;x++,i++) {
@@ -135,7 +136,7 @@ public class AStarPathFinding extends PathFinding {
             if (((x-targetx)*(x-targetx)+(y-targety)*(y-targety))<=sq_range) {
                 // path found, backtrack:
                 int last = pos;
-//                System.out.println("- Path from " + start.getX() + "," + start.getY() + " to " + targetpos%w + "," + targetpos/w + " (range " + range + ") in " + iterations + " iterations");
+                //System.out.println("- Path from " + start.getX() + "," + start.getY() + " to " + targetpos%w + "," + targetpos/w + " (range " + range + ") in " + iterations + " iterations");
                 while(parent!=pos) {
                     last = pos;
                     pos = parent;
@@ -158,14 +159,28 @@ public class AStarPathFinding extends PathFinding {
             }
             if (x<pgs.getWidth()-1 && inOpenOrClosed[pos+1] == 0) {
                 if (free[x+1][y]==null) free[x+1][y]=gs.free(x+1, y);
+
                 assert(free[x+1][y]!=null);
+                if(free[x+1][y]==null){
+                    System.out.println("STILL NULLLLLLLLL");
+
+                }
                 if (free[x+1][y]) {
                     addToOpen(x+1,y,pos+1,pos,manhattanDistance(x+1, y, targetx, targety));
                 }
             }
             if (y<pgs.getHeight()-1 && inOpenOrClosed[pos+w] == 0) {
+
                 if (free[x][y+1]==null) free[x][y+1]=gs.free(x, y+1);
+                if(free[x][y+1]==null){
+                    System.out.println("STILL NULLLLLLLLL");
+
+                }
                 assert(free[x][y+1]!=null);
+                if(free[x][y+1]==null){
+                    System.out.println("STILL NULLLLLLLLL");
+
+                }
                 if (free[x][y+1]) {
                     addToOpen(x,y+1,pos+w,pos,manhattanDistance(x, y+1, targetx, targety));
                 }
